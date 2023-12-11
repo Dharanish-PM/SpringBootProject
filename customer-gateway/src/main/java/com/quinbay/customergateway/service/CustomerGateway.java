@@ -14,6 +14,8 @@ public interface CustomerGateway  {
     String deleteProduct(Long productId);
     String purchaseProduct(PurchaseOrder purchaseOrder);
 
+    Product getProductById(Long productId);
+
 
 
 }

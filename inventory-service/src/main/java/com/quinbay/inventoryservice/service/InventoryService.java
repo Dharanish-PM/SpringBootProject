@@ -25,5 +25,11 @@ public interface InventoryService {
 
     String purchaseProduct(PurchaseOrder purchaseOrder);
 
+//    CategoryVo getProductById(Long productId);
+
+    ProductVo getProductById(Long productId);
+
+
+
 
 }

@@ -1,17 +1,15 @@
 package com.quinbay.inventoryservice.InventoryServiceImplementation;
-import ch.qos.logback.core.encoder.EchoEncoder;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quinbay.inventoryservice.dao.api.CategoryDao;
 import com.quinbay.inventoryservice.dao.api.ProductDao;
 import com.quinbay.inventoryservice.data.PurchaseOrder;
+import com.quinbay.inventoryservice.model.entity.Category;
 import com.quinbay.inventoryservice.model.entity.Product;
 import com.quinbay.inventoryservice.model.vo.CategoryVo;
 import com.quinbay.inventoryservice.model.vo.ProductVo;
 import com.quinbay.inventoryservice.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,7 +24,9 @@ public class InventoryServiceImplementation implements InventoryService{
     @Autowired
     CategoryDao categoryDao;
 
+
     @Override
+
     public List<CategoryVo> getAllProducts() {
         try{
             List<com.quinbay.inventoryservice.model.entity.Category> productList=categoryDao.findAll();
@@ -50,6 +50,7 @@ public class InventoryServiceImplementation implements InventoryService{
         try{
             ObjectMapper objectMapper=new ObjectMapper();
             categoryDao.save(objectMapper.convertValue(categoryVo, com.quinbay.inventoryservice.model.entity.Category.class));
+
             return "Success";
 
         }catch (Exception e){
@@ -60,12 +61,13 @@ public class InventoryServiceImplementation implements InventoryService{
 
     @Override
     public ProductVo getProductByName(String productName) {
+
         Product product=productDao.findByName(productName);
+
         ObjectMapper objectMapper=new ObjectMapper();
         return objectMapper.convertValue(product, com.quinbay.inventoryservice.model.vo.ProductVo.class);
 
     }
-
 
 
     @Override
@@ -124,21 +126,28 @@ public class InventoryServiceImplementation implements InventoryService{
         return "Item not available";
 
 
+
+    }
+
+    @Override
+    public ProductVo getProductById(Long productId) {
+        Product product=productDao.findById(productId).get();
+        ObjectMapper objectMapper=new ObjectMapper();
+        return objectMapper.convertValue(product, com.quinbay.inventoryservice.model.vo.ProductVo.class);
+
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
+    //    @Override
+//    public CategoryVo getProductById(Long productId) {
 //
+//        Category response=categoryDao.findById(productId).get();
+//        ObjectMapper objectMapper=new ObjectMapper();
+//        return objectMapper.convertValue(response, com.quinbay.inventoryservice.model.vo.CategoryVo.class);
+//
+//    }
+
+    //
 //
 //    @Override
 //    public ResponseEntity<List<ProductVo>> getallProducts() {

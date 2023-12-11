@@ -32,6 +32,12 @@ public class HttpMethodController {
         return new ResponseEntity<>(new ArrayList<>(),HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("/getProductById/{productId}")
+    public ResponseEntity<Product> getProuctById(@PathVariable Long productId){
+       return  new ResponseEntity<>(customerGateway.getProductById(productId),HttpStatus.OK);
+    }
+
+
     @PostMapping("/addProduct")
     public ResponseEntity<String> addProduct(@RequestBody Products product){
             String res= customerGateway.addProduct(product);
@@ -67,8 +73,6 @@ public class HttpMethodController {
         return customerGateway.purchaseProduct(purchaseOrder);
 
     }
-
-
 
 
 

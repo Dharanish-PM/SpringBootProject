@@ -46,6 +46,18 @@ public class CustomerGatewayImplementation implements CustomerGateway {
     }
 
     @Override
+    public Product getProductById(Long productId) {
+        HttpHeaders headers=new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<String> entity=new HttpEntity<>(headers);
+        UriComponents builder=UriComponentsBuilder.fromHttpUrl(INVENTORY_URL+"/getProductById/"+productId).build();
+
+        return restTemplate.exchange(builder.toUriString(), HttpMethod.GET , entity , Product.class ).getBody();
+
+    }
+
+
+    @Override
     public String addProduct(Products product) {
 
         HttpHeaders headers=new HttpHeaders();

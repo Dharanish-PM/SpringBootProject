@@ -7,6 +7,9 @@ import com.quinbay.inventoryservice.model.entity.Product;
 import com.quinbay.inventoryservice.model.vo.CategoryVo;
 import com.quinbay.inventoryservice.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.quinbay.inventoryservice.model.vo.ProductVo;
@@ -20,16 +23,24 @@ public class HttpMethodController {
     @Autowired
     InventoryService inventoryService;
 
+
     @GetMapping("/getAllProducts")
+    @Cacheable(value = "products")
     public List<CategoryVo> getAllProducts(){
         return inventoryService.getAllProducts();
     }
 
-    @GetMapping("/getProductByName/{productName}")
-    public ProductVo getProductByName(@PathVariable String productName){
-        return inventoryService.getProductByName(productName);
+    @GetMapping("/getProductById/{productId}")
+    public ProductVo getProductById(@PathVariable Long productId){
+
+        return inventoryService.getProductById(productId);
     }
 
+    @GetMapping("/getProductByName/{productName}")
+    public ProductVo getProductByName(@PathVariable String productName){
+
+        return inventoryService.getProductByName(productName);
+    }
 
     @PostMapping("/addProduct")
     public String addProductByCategory(@RequestBody CategoryVo categoryVo){
@@ -42,6 +53,7 @@ public class HttpMethodController {
     }
 
     @DeleteMapping("/deleteProduct/{productId}")
+    @CacheEvict(value = "products",allEntries = true)
     public String deleteProduct(@PathVariable Long productId){
         return inventoryService.deleteProduct(productId);
     }
@@ -52,6 +64,12 @@ public class HttpMethodController {
     public String purchaseProduct(@RequestBody PurchaseOrder purchaseOrder){
         return inventoryService.purchaseProduct(purchaseOrder);
     }
+
+//    @GetMapping("/getByCategory/{productId}")
+//
+//    public CategoryVo getProductById(@PathVariable Long productId){
+//        return inventoryService.getProductById(productId);
+//    }
 
 //    @GetMapping("/allProducts")
 //    public ResponseEntity<List<ProductVo>> getallProducts(){
